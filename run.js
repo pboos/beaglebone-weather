@@ -37,20 +37,22 @@ setup = function() {
 };
 
 loop = function() {
-  if (lastRun.getTime() < ((new Date()).getTime()-5000)) {
+  if (lastRun.getTime() < ((new Date()).getTime()-30 * 60 *  1000)) {
     lastRun = new Date();
     updateWeather();
   }
-  
-  // all off
+  // showNumber(currentWeather.temp);
+  delay(1000);
+};
+
+function showNumber(number) {
   leds.forEach(function(led) {
     digitalWrite(led, LOW);
   });
-  numbers[currentWeather.temp].forEach(function(led) {
+  numbers[number].forEach(function(led) {
     digitalWrite(led, HIGH);
   });
-  delay(500);
-};
+}
 
 function updateWeather() {
   var options = {
@@ -70,6 +72,7 @@ function updateWeather() {
       console.log(weather);
       start = weather.indexOf('temp="') + 6;
       currentWeather.temp = weather.substr(start, weather.indexOf('"', start)-start);
+      showNumber(currentWeather.temp);
     });
   }).on('error', function(e) {
     console.log("Got error: " + e.message);
